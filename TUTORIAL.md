@@ -1,16 +1,17 @@
-This is a solid, practical guide for the Dev.to community! TanStack Start is gaining a lot of traction, and multi-tenancy is one of those "how do I actually do this?" hurdles people hit early on.
+**Full Source Code** [View the complete repo on GitHub](https://www.google.com/search?q=https://github.com/harshG775/tanstack-start-multi-tenant-example)
 
-To make this post really pop, I suggest adding a brief intro to set the stage and a concluding "Pro-tip" section to help users avoid common pitfalls.
-
-Here is a slightly refined version of your draft with improved formatting and a bit more context for the reader.
-
----
 
 # Multi-Tenancy in TanStack Start: Subdomain & Hostname Routing
 
 Building a SaaS usually requires identifying a tenant by their **subdomain** or **hostname**. Because **TanStack Start** is built on top of Nitro and Vinxi, we have powerful server-side utilities to handle this during the SSR (Server-Side Rendering) phase.
 
-Here is how to implement a robust multi-tenant architecture.
+Here is the goal: Two subdomains, one codebase, completely different branding.
+
+Tenant 1 with custom branding and logo.
+![Image description](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/x6e0nmyrav3sq9iqe82m.png)
+
+Tenant 2 with custom branding and logo.
+![Image description](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/n3i4kn4ptwlu1wvw87r2.png)
 
 ---
 
