@@ -3,8 +3,17 @@ import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools"
 import { TanStackDevtools } from "@tanstack/react-devtools"
 
 import appCss from "../styles.css?url"
+import { getTenantConfig } from "#/serverFn/tenant.serverFn"
 
 export const Route = createRootRoute({
+    loader: async () => {
+        try {
+            const tenant = await getTenantConfig()
+            return { tenant: tenant }
+        } catch (error) {
+            return { tenant: null }
+        }
+    },
     head: () => ({
         meta: [
             {
