@@ -1,0 +1,27 @@
+{
+    "files.watcherExclude": {
+        "**/routeTree.gen.ts": true
+    },
+    "search.exclude": {
+        "**/routeTree.gen.ts": true
+    },
+    "files.readonlyInclude": {
+        "**/routeTree.gen.ts": true
+    },
+    "editor.detectIndentation": false,
+    "editor.insertSpaces": true,
+    "editor.tabSize": 4,
+    "editor.formatOnPaste": true,
+
+    "editor.fontFamily": "JetBrains Mono, Menlo, Monaco, Consolas, Courier New, monospace",
+    "terminal.integrated.fontFamily": "'JetBrainsMono Nerd Font', monospace",
+    "editor.fontLigatures": true,
+    "editor.fontSize": 13.5,
+    "editor.fontWeight": "500",
+    "editor.letterSpacing": -0.1,
+
+    "editor.minimap.enabled": false,
+    "editor.rulers": [120],
+    "editor.stickyScroll.enabled": false,
+    "editor.guides.bracketPairs": true
+}
