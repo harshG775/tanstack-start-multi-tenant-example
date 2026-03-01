@@ -36,17 +36,16 @@ Identification happens in `src/serverFn/tenant.serverFn.ts`. It uses `@tanstack/
 
 The tenant configuration is fetched in the `__root.tsx` loader. This ensures that:
 
-* Every route has access to the `tenant` object.
+* Every route has access to the `tenantConfig` object.
 * The UI can adapt (branding, features, etc.) before the page renders.
 * 404s are thrown immediately if a tenant doesn't exist.
 
 ### 3. Accessing Tenant Data
 
-You can access the active tenant in any component using the `useLoaderData` hook:
+You can access the active tenantConfig in any component using the `useLoaderData` hook:
 
 ```tsx
-const { tenant } = useLoaderData({ from: "__root__" })
-
+const { tenantConfig } = useLoaderData({ from: "__root__" })
 ```
 
 ---
@@ -67,7 +66,7 @@ Server functions allow you to write server-side code that seamlessly integrates 
 import { getTenantConfig } from "#/serverFn/tenant.serverFn"
 
 // Used in loaders to resolve tenant-specific data
-const tenant = await getTenantConfig()
+const tenantConfig = await getTenantConfig()
 
 ```
 
@@ -94,7 +93,7 @@ import { Link } from "@tanstack/react-router"
 
 This project uses **Tailwind CSS**. Global styles are located in `src/styles.css`.
 
-> **Tip:** You can use the `tenant` object from the root loader to dynamically apply Tailwind classes for tenant-specific branding (e.g., `<body className={tenant.themeColor}>`).
+> **Tip:** You can use the `tenantConfig` object from the root loader to dynamically apply Tailwind classes for tenant-specific branding (e.g., `<body className={tenant.themeColor}>`).
 
 ---
 
