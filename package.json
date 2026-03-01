@@ -1,5 +1,17 @@
 {
     "name": "tanstack-start-multi-tenant-example",
+    "description": "A reference implementation for hostname-based multi-tenancy using TanStack Start, Server Functions, and Root Loaders.",
+    "keywords": [
+        "tanstack",
+        "tanstack-start",
+        "react",
+        "multi-tenancy",
+        "ssr",
+        "server-functions",
+        "saas"
+    ],
+    "author": "harshG775",
+    "license": "MIT",
     "private": true,
     "type": "module",
     "imports": {
