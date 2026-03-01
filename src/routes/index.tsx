@@ -5,9 +5,9 @@ export const Route = createFileRoute("/")({
 })
 
 function HomePage() {
-    const { tenant } = useLoaderData({ from: "__root__" })
+    const { tenantConfig } = useLoaderData({ from: "__root__" })
 
-    if (!tenant) {
+    if (!tenantConfig) {
         return (
             <main className="p-6">
                 <h1>No Tenant Found</h1>
@@ -19,18 +19,18 @@ function HomePage() {
     return (
         <main className="p-6 flex items-center gap-4">
             <img
-                src={tenant.meta.logo}
-                alt={tenant.meta.name}
+                src={tenantConfig.meta.logo}
+                alt={tenantConfig.meta.name}
                 width={100}
                 height={100}
                 style={{ borderRadius: "50%" }}
             />
 
             <div>
-                <h1>Welcome to {tenant.meta.name}</h1>
-                <p>{tenant.meta.description}</p>
+                <h1>Welcome to {tenantConfig.meta.name}</h1>
+                <p>{tenantConfig.meta.description}</p>
 
-                <small>Hostname: {tenant.hostname}</small>
+                <small>Hostname: {tenantConfig.hostname}</small>
             </div>
         </main>
     )

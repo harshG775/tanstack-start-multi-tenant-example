@@ -8,19 +8,19 @@ import { getTenantConfig } from "#/serverFn/tenant.serverFn"
 export const Route = createRootRoute({
     loader: async () => {
         try {
-            const tenant = await getTenantConfig()
-            return { tenant: tenant }
+            const tenantConfig = await getTenantConfig()
+            return { tenantConfig: tenantConfig }
         } catch (error) {
-            return { tenant: null }
+            return { tenantConfig: null }
         }
     },
     head: (ctx) => {
-        const tenant = ctx.loaderData?.tenant
+        const tenantConfig = ctx.loaderData?.tenantConfig
 
-        const title = tenant?.meta.name ?? "TanStack Start Starter"
-        const description = tenant?.meta.description ?? "Default app description"
-        const favicon = tenant?.meta.favicon ?? "/favicon.ico"
-        const image = tenant?.meta.logo
+        const title = tenantConfig?.meta.name ?? "TanStack Start Starter"
+        const description = tenantConfig?.meta.description ?? "Default app description"
+        const favicon = tenantConfig?.meta.favicon ?? "/favicon.ico"
+        const image = tenantConfig?.meta.logo
 
         return {
             meta: [
