@@ -7,10 +7,31 @@ export const Route = createFileRoute("/")({
 function HomePage() {
     const { tenant } = useLoaderData({ from: "__root__" })
 
+    if (!tenant) {
+        return (
+            <main className="p-6">
+                <h1>No Tenant Found</h1>
+                <p>This domain is not configured.</p>
+            </main>
+        )
+    }
+
     return (
-        <main className="p-6">
-            <h1 className="text-xl font-bold">Active Tenant</h1>
-            <pre className="mt-4 bg-gray-100 p-4 rounded">{JSON.stringify(tenant, null, 2)}</pre>
+        <main className="p-6 flex items-center gap-4">
+            <img
+                src={tenant.meta.logo}
+                alt={tenant.meta.name}
+                width={100}
+                height={100}
+                style={{ borderRadius: "50%" }}
+            />
+
+            <div>
+                <h1>Welcome to {tenant.meta.name}</h1>
+                <p>{tenant.meta.description}</p>
+
+                <small>Hostname: {tenant.hostname}</small>
+            </div>
         </main>
     )
 }

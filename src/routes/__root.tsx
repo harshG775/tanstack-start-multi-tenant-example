@@ -14,26 +14,35 @@ export const Route = createRootRoute({
             return { tenant: null }
         }
     },
-    head: () => ({
-        meta: [
-            {
-                charSet: "utf-8",
-            },
-            {
-                name: "viewport",
-                content: "width=device-width, initial-scale=1",
-            },
-            {
-                title: "TanStack Start Starter",
-            },
-        ],
-        links: [
-            {
-                rel: "stylesheet",
-                href: appCss,
-            },
-        ],
-    }),
+    head: (ctx) => {
+        const tenant = ctx.loaderData?.tenant
+
+        const title = tenant?.meta.name ?? "TanStack Start Starter"
+        const description = tenant?.meta.description ?? "Default app description"
+        const favicon = tenant?.meta.favicon ?? "/favicon.ico"
+        const image = tenant?.meta.logo
+
+        return {
+            meta: [
+                { charSet: "utf-8" },
+                { name: "viewport", content: "width=device-width, initial-scale=1" },
+                { title },
+                { name: "description", content: description },
+
+                // Open Graph
+                { property: "og:title", content: title },
+                { property: "og:description", content: description },
+                { property: "og:image", content: image },
+
+                // Twitter
+                { name: "twitter:card", content: "summary_large_image" },
+            ],
+            links: [
+                { rel: "stylesheet", href: appCss },
+                { rel: "icon", href: favicon },
+            ],
+        }
+    },
     shellComponent: RootDocument,
 })
 
