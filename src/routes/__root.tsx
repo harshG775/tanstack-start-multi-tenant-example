@@ -6,12 +6,16 @@ import appCss from "../styles.css?url"
 import { getTenantConfig } from "#/serverFn/tenant.serverFn"
 
 export const Route = createRootRoute({
+    staleTime: Infinity , //to stop fetching the getTenantConfig again on route navigation
     loader: async () => {
         try {
             const tenantConfig = await getTenantConfig()
-            return { tenantConfig: tenantConfig }
+            return { tenantConfig }
         } catch (error) {
-            return { tenantConfig: null }
+            if (error instanceof Response && error.status === 404) {
+                return { tenantConfig: null }
+            }
+            throw error
         }
     },
     head: (ctx) => {
