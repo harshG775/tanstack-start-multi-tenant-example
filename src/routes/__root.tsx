@@ -1,25 +1,13 @@
-import { HeadContent, Scripts, createRootRoute } from "@tanstack/react-router"
+import { HeadContent, Scripts, createRootRouteWithContext } from "@tanstack/react-router"
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools"
 import { TanStackDevtools } from "@tanstack/react-devtools"
 
+import type { TenantType } from "#/lib/api"
 import appCss from "../styles.css?url"
-import { getTenantConfig } from "#/serverFn/tenant.serverFn"
 
-export const Route = createRootRoute({
-    staleTime: Infinity , //to stop fetching the getTenantConfig again on route navigation
-    loader: async () => {
-        try {
-            const tenantConfig = await getTenantConfig()
-            return { tenantConfig }
-        } catch (error) {
-            if (error instanceof Response && error.status === 404) {
-                return { tenantConfig: null }
-            }
-            throw error
-        }
-    },
-    head: (ctx) => {
-        const tenantConfig = ctx.loaderData?.tenantConfig
+export const Route = createRootRouteWithContext<{ tenantConfig: TenantType }>()({
+    head: ({ match }) => {
+        const tenantConfig = match.context.tenantConfig
 
         const title = tenantConfig?.meta.name ?? "TanStack Start Starter"
         const description = tenantConfig?.meta.description ?? "Default app description"
