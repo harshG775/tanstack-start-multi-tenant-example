@@ -22,7 +22,9 @@ function HomePage() {
                     <p>{tenantConfig.meta.description}</p>
 
                     <small>Hostname: {tenantConfig.hostname}</small>
-                    <Link to="/settings" className="block max-w-max underline hover:text-blue-600">Navigate to settings</Link>
+                    <Link to="/settings" className="block max-w-max underline hover:text-blue-600">
+                        Navigate to settings
+                    </Link>
                 </div>
             </section>
         </main>
