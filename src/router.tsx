@@ -1,6 +1,8 @@
+// src/router.tsx
+
 import { createRouter as createTanStackRouter } from "@tanstack/react-router"
 import { routeTree } from "./routeTree.gen"
-import { getTenantConfig } from "./serverFn/tenant.serverFn"
+import { getTenantConfig } from "./functions/tenant.serverFn"
 
 export async function getRouter() {
     const tenantConfig = await getTenantConfig()

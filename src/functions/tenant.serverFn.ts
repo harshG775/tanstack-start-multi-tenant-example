@@ -1,3 +1,5 @@
+// src/functions/tenant.serverFn.ts
+
 import { getTenantConfigByHostname } from "#/lib/api"
 import { normalizeHostname } from "#/lib/normalizeHostname"
 import { createServerFn } from "@tanstack/react-start"

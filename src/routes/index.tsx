@@ -1,3 +1,5 @@
+// src/routes/index.tsx
+
 import { createFileRoute, Link, useRouteContext } from "@tanstack/react-router"
 
 export const Route = createFileRoute("/")({

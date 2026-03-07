@@ -1,3 +1,5 @@
+// src/lib/normalizeHostname.ts
+
 export const normalizeHostname = (hostname: string): string => {
     let finalHostname = hostname
 

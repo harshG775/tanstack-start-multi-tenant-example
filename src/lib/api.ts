@@ -32,6 +32,6 @@ const tenantsDB = [
 ]
 let count = 0
 export const getTenantConfigByHostname = ({ hostname }: { hostname: string }) => {
-    console.log("resolveTenantByHostname call count:", count++)
+    console.log("<getTenantConfigByHostname> call count:", count++)
     return tenantsDB.find((tenant) => tenant.hostname === hostname) ?? null
 }
