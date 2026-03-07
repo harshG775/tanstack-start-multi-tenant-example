@@ -1,4 +1,14 @@
-const tenantsDB= [
+export type TenantType = {
+    id: string
+    hostname: string
+    meta: {
+        name: string
+        description: string
+        logo: string
+        favicon: string
+    }
+}
+const tenantsDB = [
     {
         id: "tenant-1",
         hostname: "tenant-1.com",
@@ -20,7 +30,8 @@ const tenantsDB= [
         },
     },
 ]
-
+let count = 0
 export const getTenantConfigByHostname = ({ hostname }: { hostname: string }) => {
+    console.log("<getTenantConfigByHostname> call count:", count++)
     return tenantsDB.find((tenant) => tenant.hostname === hostname) ?? null
 }
