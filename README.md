@@ -1,115 +1,58 @@
+# TanStack Start Multi-Tenant Example
 
-# TanStack Start Multi-Tenant Starter
+A production-ready, **hostname-based multi-tenant application** built with **TanStack Start** and **React**. Demonstrates full-stack architecture for SaaS platforms serving multiple tenants from a single codebase.
 
-This is a specialized TanStack Start project configured for **Multi-Tenancy** based on hostnames and subdomains.
+## Key Features
 
-## Getting Started
+- **Hostname-based Tenant Resolution** – Automatically identify tenants from request hostname
+- **Server-Side Rendering (SSR)** – Tenant configuration loaded during request lifecycle
+- **Type-Safe** – Full TypeScript support with router context typing
+- **Scalable Architecture** – Tenant data injected into router context before hydration
 
-To run this application locally:
+## Demo
+
+**Tenant One**  
+![Tenant 1](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/ijod78slb3ceq7rmokwd.png)
+
+**Tenant Two**  
+![Tenant 2](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/diuxzwj9rx6twd3c6oyw.png)
+
+##  Tech Stack
+
+- **[TanStack Start](https://tanstack.com/router/latest)** – Full-stack framework with server functions
+- **[TanStack Router](https://tanstack.com/router/latest)** – Type-safe routing with context
+- **React** – UI component framework
+- **TypeScript** – Type safety & developer experience
+- **Vite** – Lightning-fast build tool
+
+## Architecture
+
+```
+Request → Hostname Resolution → Tenant Lookup → Router Context → SSR → Hydrated App
+```
+
+Each tenant receives isolated:
+- Branding & metadata
+- Logo & favicon
+- Configuration
+
+## Quick Start
 
 ```bash
 pnpm install
 pnpm dev
-
 ```
 
-### Local Development Tip
-
-To test multi-tenancy locally, you can use subdomains on `localhost`.
-
-* `tenant-1.localhost:3000`
-* `tenant-2.localhost:3000`
-
-The project includes a `normalizeHostname` utility to handle these local URLs and map them to the correct tenant configuration.
-
----
-
-## Multi-Tenancy Architecture
-
-This project uses a "Server-First" approach to tenant identification.
-
-### 1. Tenant Resolution
-
-Identification happens in `src/serverFn/tenant.serverFn.ts`. It uses `@tanstack/react-start/server` to grab the request URL and find the matching tenant in your database/API.
-
-### 2. Global State via Root Loader
-
-The tenant configuration is fetched in the `__root.tsx` loader. This ensures that:
-
-* Every route has access to the `tenantConfig` object.
-* The UI can adapt (branding, features, etc.) before the page renders.
-* 404s are thrown immediately if a tenant doesn't exist.
-
-### 3. Accessing Tenant Data
-
-You can access the active tenantConfig in any component using the `useLoaderData` hook:
-
-```tsx
-const { tenantConfig } = useLoaderData({ from: "__root__" })
-```
-
----
-
-## Project Structure
-
-* `src/lib/normalizeHostname.ts`: Logic to strip ports and `localhost` for consistent tenant lookups.
-* `src/serverFn/tenant.serverFn.ts`: Server-side logic to identify the tenant from the request.
-* `src/routes/__root.tsx`: The main layout that bootstraps the tenant context.
-
----
-
-## Server Functions
-
-Server functions allow you to write server-side code that seamlessly integrates with your client components. In this project, they are used to securely access request headers and database configs.
-
-```tsx
-import { getTenantConfig } from "#/serverFn/tenant.serverFn"
-
-// Used in loaders to resolve tenant-specific data
-const tenantConfig = await getTenantConfig()
-
-```
-
----
-
-## Routing
-
-This project uses [TanStack Router](https://tanstack.com/router) with file-based routing.
-
-### Adding A Route
-
-Add a new file in `./src/routes`. TanStack will automatically generate the route tree. To navigate between tenant pages, use the `Link` component:
-
-```tsx
-import { Link } from "@tanstack/react-router"
-
-<Link to="/settings">Tenant Settings</Link>
-
-```
-
----
-
-## Styling
-
-This project uses **Tailwind CSS**. Global styles are located in `src/styles.css`.
-
-> **Tip:** You can use the `tenantConfig` object from the root loader to dynamically apply Tailwind classes for tenant-specific branding (e.g., `<body className={tenant.themeColor}>`).
-
----
-
-## Commands
-
-| Command | Description |
-| --- | --- |
-| `pnpm dev` | Starts development server |
-| `pnpm build` | Builds for production |
-| `pnpm test` | Runs Vitest suite |
-| `pnpm lint` | Lints code using ESLint |
-| `pnpm format` | Formats code with Prettier |
-
----
+Visit `tenant-1.com.localhost:3000` and `tenant-2.com.localhost:3000` to see different tenant branding.
 
 ## Learn More
 
-* [TanStack Start Docs](https://tanstack.com/start)
-* [TanStack Router Docs](https://tanstack.com/router)
+See [TUTORIAL.md](./TUTORIAL.md) for complete implementation guide.
+
+## Skills Demonstrated
+
+✓ Full-Stack Development (Server + Client)  
+✓ Multi-Tenant Architecture  
+✓ Server Functions & SSR  
+✓ Type-Safe Router Context  
+✓ Express-like Request Handling  

@@ -21,15 +21,18 @@ The complete code for this tutorial is available on [https://github.com/harshG77
 
 Two tenants running from the same application:
 
-```
+```text
 tenant-1.com → Tenant One branding
 tenant-2.com → Tenant Two branding
 ```
+
 Tenant 1 with custom branding and logo.
-![Image description](/public/images/tenant-1.png)
+
+![Tenant 1](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/ijod78slb3ceq7rmokwd.png)
 
 Tenant 2 with custom branding and logo.
-![Image description](/public/images/tenant-2.png)
+
+![Tenant 1](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/diuxzwj9rx6twd3c6oyw.png)
 
 Each tenant will have:
 
@@ -46,7 +49,7 @@ All resolved automatically during the **request lifecycle**.
 
 Tenant resolution happens during SSR before the router renders.
 
-```
+```text
 Request
    ↓
 Nitro Runtime
@@ -68,20 +71,16 @@ The tenant configuration is loaded once and injected into the **router context**
 
 # Project Structure
 
-```
+```text
 src
 ├─ functions
 │  └─ tenant.serverFn.ts
-│
 ├─ lib
 │  ├─ api.ts
 │  └─ normalizeHostname.ts
-│
 ├─ routes
 │  ├─ __root.tsx
-│  ├─ index.tsx
-│  └─ settings.tsx
-│
+│  └─ index.tsx
 └─ router.tsx
 ```
 
@@ -141,7 +140,7 @@ In production this would typically query a **database**.
 
 During development the hostname might look like:
 
-```
+```text
 tenant-1.com.localhost:3000
 ```
 
@@ -206,14 +205,14 @@ import { routeTree } from "./routeTree.gen"
 import { getTenantConfig } from "./functions/tenant.serverFn"
 
 export async function getRouter() {
-    const tenantConfig = await getTenantConfig()
+    const tenantConfig = await getTenantConfig() // <--
 
     const router = createTanStackRouter({
         routeTree,
         scrollRestoration: true,
 
         context: {
-            tenantConfig,
+            tenantConfig, // <--
         },
     })
 
@@ -238,9 +237,10 @@ The root route can now dynamically set metadata and assets.
 `src/routes/__root.tsx`
 
 ```tsx
+import type { TenantType } from "#/lib/api"
 export const Route = createRootRouteWithContext<{ tenantConfig: TenantType }>()({
     head: ({ match }) => {
-        const tenant = match.context.tenantConfig
+        const tenant = match.context.tenantConfig // <--
 
         return {
             meta: [{ title: tenant.meta.name }, { name: "description", content: tenant.meta.description }],
@@ -266,10 +266,17 @@ export const Route = createFileRoute("/")({
 })
 
 function HomePage() {
-    const { tenantConfig } = useRouteContext({ from: "__root__" })
+    const { tenantConfig } = useRouteContext({ from: "__root__" }) // <--
 
     return (
         <main>
+            <img
+                src={tenantConfig.meta.logo}
+                alt={tenantConfig.meta.name}
+                width={100}
+                height={100}
+                style={{ borderRadius: "50%" }}
+            />
             <h1>{tenantConfig.meta.name}</h1>
             <p>{tenantConfig.meta.description}</p>
         </main>
@@ -304,7 +311,3 @@ All resolved during **server-side rendering**.
 - **Validation:** Ensure tenants are active and not suspended before returning configuration.
 - **Assets:** Use absolute URLs or correctly prefixed CDN paths for cross-domain asset loading.
 - **Security:** Avoid exposing internal tenant configuration fields to the client.
-
----
-
-This approach provides a clean, SSR-first architecture for hostname-based multi-tenancy in TanStack Start while keeping sensitive logic server-only.
