@@ -1,3 +1,5 @@
+import { createCache } from "../cache"
+
 export type TenantType = {
     id: string
     hostname: string
@@ -51,7 +53,9 @@ export const db = {
     },
 }
 
-const tenantCache = new Map<string, TenantType | undefined>()
+const TENANT_CACHE_TTL_MS = 60_000 // 1 minute — how long a resolved tenant stays cached before re-fetching
+
+const tenantCache = createCache<TenantType | undefined>(TENANT_CACHE_TTL_MS)
 
 export const getTenantByHostname = async (hostname: string) => {
     if (tenantCache.has(hostname)) {
