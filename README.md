@@ -90,6 +90,7 @@ Each tenant has a custom name, description, logo, and favicon — all resolved a
 ```text
 src
 ├─ lib
+│  ├─ cache.ts                 # generic, reusable in-memory TTL cache
 │  ├─ db
 │  │  └─ index.ts              # fake in-memory "drizzle-style" db + cached tenant lookup
 │  └─ server
@@ -165,11 +166,52 @@ Adding another mock table later is a one-liner: `db.query.users = createTable(us
 
 ### Cache the lookup
 
-A real tenant lookup would hit a database on every request. We cache it in-memory here (swap the `Map` for Redis in production, behind the same function signature):
+A real tenant lookup would hit a database on every request. We cache it in-memory here — but the caching mechanism itself has nothing to do with tenants, so it lives in its own module, separate from the tenant-specific code that uses it.
+
+`src/lib/cache.ts` — a generic, reusable cache with the same `has`/`get`/`set` shape as a `Map`, except entries expire after a TTL:
 
 ```ts
-// In-memory cache for the POC — swap for Redis (or similar) in production.
-const tenantCache = new Map<string, TenantType | undefined>()
+// A generic, in-memory, time-limited cache — a Map that forgets entries after a TTL.
+export type Cache<T> = {
+    has: (key: string) => boolean
+    get: (key: string) => T | undefined
+    set: (key: string, value: T) => void
+}
+
+export function createCache<T>(ttlMs: number): Cache<T> {
+    type Entry = { value: T; expiresAt: number }
+
+    const store = new Map<string, Entry>()
+
+    const isExpired = (entry: Entry) => entry.expiresAt <= Date.now()
+
+    return {
+        has: (key) => {
+            const entry = store.get(key)
+            return entry !== undefined && !isExpired(entry)
+        },
+        get: (key) => {
+            const entry = store.get(key)
+            if (!entry || isExpired(entry)) {
+                return undefined
+            }
+            return entry.value
+        },
+        set: (key, value) => {
+            store.set(key, { value, expiresAt: Date.now() + ttlMs })
+        },
+    }
+}
+```
+
+`src/lib/db/index.ts` then just *consumes* it — one line to create a cache instance, then plain `has`/`get`/`set` calls, no expiry logic in sight:
+
+```ts
+import { createCache } from "../cache"
+
+const TENANT_CACHE_TTL_MS = 60_000 // 1 minute — how long a resolved tenant stays cached before re-fetching
+
+const tenantCache = createCache<TenantType | undefined>(TENANT_CACHE_TTL_MS)
 
 export const getTenantByHostname = async (hostname: string) => {
     if (tenantCache.has(hostname)) {
@@ -182,7 +224,7 @@ export const getTenantByHostname = async (hostname: string) => {
 }
 ```
 
-Caching a miss (`undefined`) too means an unknown hostname doesn't repeatedly hit the "database" either.
+Caching a miss (`undefined`) too means an unknown hostname doesn't repeatedly hit the "database" either. The TTL bounds staleness automatically — after a tenant's data changes, the update shows up within `TENANT_CACHE_TTL_MS` at worst, with no explicit invalidation call required. Swap `createCache`'s `Map` for Redis in production behind the same `has`/`get`/`set` shape, and Redis's own key expiry (`EX`/`PX`) replaces the TTL logic directly.
 
 ## Step 2: Resolve the Tenant in Request Middleware
 
