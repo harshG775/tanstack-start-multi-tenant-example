@@ -1,34 +1,26 @@
-// src/routes/index.tsx
+import { createFileRoute } from "@tanstack/react-router"
 
-import { createFileRoute, Link, useRouteContext } from "@tanstack/react-router"
+export const Route = createFileRoute("/")({ component: App })
 
-export const Route = createFileRoute("/")({
-    component: HomePage,
-})
+function App() {
+    const { tenant } = Route.useRouteContext()
 
-function HomePage() {
-    const { tenantConfig } = useRouteContext({ from: "__root__" })
     return (
-        <main>
-            <section className="p-6 flex items-center gap-4">
+        <main className="page-wrap px-4 pb-8 pt-14">
+            <div className="flex items-center gap-4">
                 <img
-                    src={tenantConfig.meta.logo}
-                    alt={tenantConfig.meta.name}
-                    width={100}
-                    height={100}
-                    style={{ borderRadius: "50%" }}
+                    src={tenant.meta.logo}
+                    alt={tenant.meta.name}
+                    width={64}
+                    height={64}
+                    className="rounded-full"
                 />
-
                 <div>
-                    <h1>Welcome to {tenantConfig.meta.name}</h1>
-                    <p>{tenantConfig.meta.description}</p>
-
-                    <small>Hostname: {tenantConfig.hostname}</small>
-                    <Link to="/settings" className="block max-w-max underline hover:text-blue-600">
-                        Navigate to settings
-                    </Link>
+                    <h1 className="text-2xl font-bold">{tenant.meta.name}</h1>
+                    <p>{tenant.meta.description}</p>
+                    <small className="text-muted-foreground">Hostname: {tenant.hostname}</small>
                 </div>
-            </section>
+            </div>
         </main>
     )
 }
