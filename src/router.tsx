@@ -1,21 +1,17 @@
-// src/router.tsx
-
 import { createRouter as createTanStackRouter } from "@tanstack/react-router"
 import { routeTree } from "./routeTree.gen"
-import { getTenantConfig } from "./functions/tenant.serverFn"
 
-export async function getRouter() {
-    const tenantConfig = await getTenantConfig()
-
+export function getRouter() {
     const router = createTanStackRouter({
         routeTree,
-
         scrollRestoration: true,
         defaultPreload: "intent",
         defaultPreloadStaleTime: 0,
-        context: {
-            tenantConfig: tenantConfig,
-        },
+        defaultNotFoundComponent: () => (
+            <div className="flex min-h-screen items-center justify-center p-6 text-3xl font-semibold">
+                Page not found.
+            </div>
+        ),
     })
 
     return router
