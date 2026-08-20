@@ -16,6 +16,7 @@ export const Route = createRootRoute({
         const description = tenant.meta.description || "A TanStack Start application"
         const favicon = tenant.meta.favicon || "/favicon.ico"
         const logo = tenant.meta.logo || "/logo.png"
+        const url = `https://${tenant.hostname}${match.pathname}`
 
         return {
             meta: [
@@ -46,8 +47,28 @@ export const Route = createRootRoute({
                     content: logo,
                 },
                 {
+                    property: "og:url",
+                    content: url,
+                },
+                {
                     name: "twitter:card",
                     content: "summary_large_image",
+                },
+                {
+                    name: "twitter:title",
+                    content: title,
+                },
+                {
+                    name: "twitter:description",
+                    content: description,
+                },
+                {
+                    name: "twitter:image",
+                    content: logo,
+                },
+                {
+                    name: "twitter:url",
+                    content: url,
                 },
             ],
             links: [

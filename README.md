@@ -275,6 +275,7 @@ export const Route = createRootRoute({
         const description = tenant.meta.description || "A TanStack Start application"
         const favicon = tenant.meta.favicon || "/favicon.ico"
         const logo = tenant.meta.logo || "/logo.png"
+        const url = `https://${tenant.hostname}${match.pathname}`
 
         return {
             meta: [
@@ -285,7 +286,12 @@ export const Route = createRootRoute({
                 { property: "og:title", content: title },
                 { property: "og:description", content: description },
                 { property: "og:image", content: logo },
+                { property: "og:url", content: url },
                 { name: "twitter:card", content: "summary_large_image" },
+                { name: "twitter:title", content: title },
+                { name: "twitter:description", content: description },
+                { name: "twitter:image", content: logo },
+                { name: "twitter:url", content: url },
             ],
             links: [
                 { rel: "stylesheet", href: appCss },
@@ -297,7 +303,7 @@ export const Route = createRootRoute({
 })
 ```
 
-`tenant` is guaranteed non-`undefined` here — `getTenantFn` already threw a 404 for a missing tenant before `beforeLoad` could return one. The `||` fallbacks instead guard against a tenant *record* with a blank field.
+`tenant` is guaranteed non-`undefined` here — `getTenantFn` already threw a 404 for a missing tenant before `beforeLoad` could return one. The `||` fallbacks instead guard against a tenant *record* with a blank field. `og:url`/`twitter:url` need a real URL, not the raw request — different platforms' link-preview crawlers expect the canonical production domain, not the `.localhost` dev hostname, so it's built from `tenant.hostname` directly rather than `getRequestUrl()`.
 
 ## Step 6: A Friendly Router-Wide Not Found Page
 
